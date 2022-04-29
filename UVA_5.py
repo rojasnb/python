@@ -59,7 +59,7 @@ def dia(n):
 
 def grafico(tortuga, x, y, raciones):
     turtle.pendown()
-    turtle.forward(30)
+    turtle.forward(30)  
     turtle.left(90)
     turtle.forward(raciones)
     turtle.left(90)
