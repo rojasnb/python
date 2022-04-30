@@ -1,6 +1,9 @@
+#   Funciones importadas
+
 from random import randint
-from turtle import Screen, Turtle
-import turtle
+from turtle import Turtle, Screen
+
+#   Funciones
 
 def estimacion(t,p,estacion):
     if p < 0.5 and estacion == "verano":
@@ -43,25 +46,79 @@ def promocion(estacion,raciones):
 def dia(n):
     if n == 1:
         dia = "Lunes"
+        return dia
     elif n == 2:
         dia = "Martes"
+        return dia
     elif n == 3:
         dia = "Miércoles"
+        return dia
     elif n == 4:
         dia = "Jueves"
+        return dia
     elif n == 5:
         dia = "Viernes"
+        return dia
     elif n == 6:
         dia = "Sábado"
+        return dia
     elif n == 7:
         dia = "Domingo"
-    return dia
+        return dia
 
-def grafico(tortuga, x, y, raciones):
-    turtle.pendown()
-    turtle.forward(30)  
-    turtle.left(90)
-    turtle.forward(raciones)
-    turtle.left(90)
-    turtle.forward(30)
-    turtle.forward(raciones)
+def grafico(t, x, y, raciones):
+    t.speed(99999)
+    t.penup()
+    t.goto(x,y)
+    t.pendown()
+    t.forward(60)
+    t.left(90)
+    t.forward(raciones*3)
+    t.left(90)
+    t.forward(40)
+    t.write(raciones)
+    t.forward(20)
+    t.left(90)
+    t.forward(raciones*3)
+    t.left(90)
+
+def leyenda(t, x, y, texto):
+    t.speed(99999)
+    t.penup()
+    t.goto(x, y-15)
+    t.pendown()
+    t.write(texto)
+
+#   Programa principal
+
+pantalla = Screen()
+tortuga = Turtle()
+tortuga.screen.title("*** El Kiwi del Mote con Huesillos ***")
+n = 1
+x = 0
+
+print()
+print("*** El Kiwi del Mote con Huesillos ***")
+print()
+print()
+estacion = input("Estación: ")
+print()
+
+while n <= 7:
+    n_dia = dia(n)
+    y = 0
+    print ("Día", n)
+    temp = int(input("Pronóstico de temperatura: "))
+    lluvia = float(input("Probabilidad de lluvia: "))
+    porciones = estimacion(temp, lluvia, estacion)
+    promo = promocion(estacion, porciones)
+    print()
+    print("Se producirán", porciones, "raciones; Se regalarán", promo ,"raciones para promoción.")
+    print()
+    grafico(tortuga, x, y, porciones)
+    grafico(tortuga, x, y, promo)
+    leyenda(tortuga, x, y, n_dia)
+    x += 60
+    n += 1
+  
+pantalla.exitonclick()
