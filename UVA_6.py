@@ -52,8 +52,6 @@ def puntaje(palabra):
             vocales_totales += 1
         elif palabra[n] in consonantes:
             consonantes_totales += 1
-        else:
-            varios_totales += 1
         n += 1  
     puntaje = len(palabra)*10 + vocales_totales*5 + consonantes_totales*3
     return puntaje
@@ -64,7 +62,7 @@ print("Bienvenido al PysCrable")
 print()
 tamaño = 0
 
-while tamaño < 10 and tamaño <= 35:
+while tamaño < 10 or tamaño > 35:
     tamaño = int(input("Ingrese el tamaño del universo de letras: "))
 
 universo = generador_universo(tamaño)
