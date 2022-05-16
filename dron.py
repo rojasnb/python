@@ -1,28 +1,51 @@
-# Tello Python3 Control Demo 
-#
-# http://www.ryzerobotics.com/
-#
-# 1/1/2018
-
+from random import randint
 import threading 
 import socket
-import sys
 import time
-import platform
-
-from click import command  
 
 host = ''
 port = 9000
 locaddr = (host,port) 
 
+# preguntas y respuestas
 
-# Create a UDP socket
+pregunta1 = "Robolx se creo en el año 2009"
+pregunta2 = "David Baszucki es el dueño de Roblox"
+pregunta3 = "Bloxburg solo se puede encontrar en Roblox"
+pregunta4 = "El número de amigos máximo que puedes tener en Roblox es de 300"
+pregunta5 = "En Roblox Studio puedes crear tus juegos y mundos"
+pregunta6 = "Robux es la moneda virtual en Roblox"
+pregunta7 = "Minecraft fue lanzado el año 2013"
+pregunta8 = "Al final de minecraft debes pelear contra un dragón"
+pregunta9 = "El Creeper está inspirado en un sueño del desarrollador"
+pregunta10= "En Minecraft es posible volar en modo supervivencia"
+preguntas = [pregunta1, pregunta2, pregunta3, pregunta4, pregunta5, pregunta6, pregunta7, pregunta8, pregunta9, pregunta10]
+
+respuesta1 = "f"
+respuesta2 = "v"
+respuesta3 = "v"
+respuesta4 = "f"
+respuesta5 = "v"
+respuesta6 = "v"
+respuesta7 = "f"
+respuesta8 = "v"
+respuesta9 = "f"
+respuesta10= "v"
+respuestas = [respuesta1, respuesta2, respuesta3, respuesta4, respuesta5, respuesta6, respuesta7, respuesta8, respuesta9, respuesta10]
+
+n_de_preguntas = 0
+respuestas_correctas = 0
+limite = 9
+
+# Creción del socket UDP 
+
 sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
 tello_address = ('192.168.10.1', 8889)
 
 sock.bind(locaddr)
+
+# Funciones definidas
 
 def recv():
     count = 0
@@ -38,68 +61,58 @@ def iniciador():
     msg = "command"
     msg = msg.encode(encoding="utf-8") 
     sent = sock.sendto(msg, tello_address)
+    msg = "takeoff"
+    msg = msg.encode(encoding="utf-8") 
+    sent = sock.sendto(msg, tello_address)    
 
-def verificador (respueta, respuesta_correcta):
-        #respuesta = input("Selecciona una opción: ")
-        if respuesta == respuesta_correcta:
-            print ("Correcto! El dron avanza :D")
-            msg = "takeoff"
-            return msg
-        else:
-            print ("Respuesta incorrecta! :(")
-            msg = "land"
-            return msg
-          
-
-# pregnutas
-pregunta1 = ""
-pregunta2 = ""
-pregunta3 = ""
-pregunta4 = ""
-pregunta5 = ""
-pregunta6 = ""
-pregunta7 = ""
-pregunta8 = ""
-pregunta9 = ""
-pregunta10= ""
-preguntas = [ pregunta1, pregunta2, pregunta3, pregunta4, pregunta5, pregunta6, pregunta7, pregunta8, pregunta9, pregunta10 ]
-
-# Iniciador
-print ("Bienvenidos a la carrera del dron USM!")
-input("Presiona enter para empezar la carrera!")
-iniciador()
-
-
-#recvThread create
+# Creaciń de recvThread 
 recvThread = threading.Thread(target=recv)
 recvThread.start()
 
-while True: 
-    try:
-        respuesta = input("a o b: ")
-        msg = verificador(respuesta,"a")
+# Iniciador
+print ("Bienvenid@ a la carrera del dron!!")
+input("Presiona enter para empezar la carrera!")
+iniciador()
 
-        if not msg:
-            break  
+while n_de_preguntas < 5:
+    random = randint(0,limite)
+    pregunta = preguntas.pop(random)
+    respuesta_correcta = respuestas.pop(random)
+    print (pregunta)
+    respuesta = input("El enunciado anterior, ¿es verdadero (v) o falso? (f): ")
+    respuesta = respuesta.lower()
 
-        if 'end' in msg:
-            print ('...')
-            sock.close()  
-            break
+    if respuesta == respuesta_correcta:
+            print ("Correcto! El dron avanza :D")
+            respuestas_correctas += 1
+            msg = "forward 30"
+            # Enviar mensaje
+            msg = msg.encode(encoding="utf-8") 
+            sent = sock.sendto(msg, tello_address)
+            time.sleep(5)
 
-        # Send data
+    elif respuesta == 'x':
+        print ('Apagado de emregencia! Apagando motores...')
+        msg = "emergency"
         msg = msg.encode(encoding="utf-8") 
         sent = sock.sendto(msg, tello_address)
-    except KeyboardInterrupt:
-        print ('\n . . .\n')
-        sock.close()  
+        print ('Motores apagados')
+        sock.close()            
         break
+    else:
+            print ("Respuesta incorrecta! :(")
+     
+    n_de_preguntas += 1
+    limite -= 1
 
+msg = "land"
+msg = msg.encode(encoding="utf-8") 
+sent = sock.sendto(msg, tello_address)
 
-"""
-        python_version = str(platform.python_version())
-        version_init_num = int(python_version.partition('.')[0]) 
-       # print (version_init_num)
-        if version_init_num == 3:
-            msg = input("")
-"""
+if respuestas_correctas == 5:
+    print ('Llegaste a la meta!! Felicitaciones!!')
+    
+else:
+    print ('Partida terminada! Lo siento, no cruzaste la linea de meta :(')
+
+sock.close()
