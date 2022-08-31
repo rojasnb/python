@@ -1,0 +1,53 @@
+Primero pasamos los números decimales 3499 y −21868 a binario.
+            3499 decimal = 1101 1010 1011 binario            -21868 decimal = 101 0101 0110 1100 binario
+
+Ahora los transformamos a complemento de 2 invirtiendolos y sumandole 1 bit más.
+            1101 1010 1011                                  101 0101 0110 1100
+            0010 0101 0100 + 1 = 0010 0101 0101             010 1010 1001 0011 + 1 = 010 1010 1001 0100
+
+            Y agregamos los bits faltantes para los 16-bits solicitados.
+
+                0000 0010 0101 0101 = 3499 decimal                 1010 1010 1001 0100 = -21868 decimal
+
+                Sumamos los resultados.
+                                               1     1  1  
+                                         0000 0010 0101 0101
+                                       + 1010 1010 1001 0100
+                                    ------------------------
+                                         1010 1100 1110 1001
+
+            Y por ultimo transformamos el resultado en binario complemento de dos a hexadecimal.
+
+                                     1010 1100 1110 1001 = 0xACE9
+
+
+ 3499:2=1749                                    21868:2=10934
+ 1                                              0
+ 1749:2=874                                     10934:2=5467
+ 1                                              0
+ 874:2=437                                      5467:2=2733
+ 0                                              1
+ 437:2=218                                      2733:2=1366
+ 1                                              1
+ 218:2=109                                      1366:2=683
+ 0                                              0
+ 109:2=54                                       683:2=341
+ 1                                              1    
+ 54:2=27                                        341:2=170
+ 0                                              1
+ 27:2=13                                        170:2=85
+ 1                                              0    
+ 13:2=6                                         85:2=42
+ 1                                              1
+ 6:2=3                                          42:2=21
+ 0                                              0    
+ 3:2=1                                          21:2=10
+ 1                                              1    
+ 1:2=0                                          10:2=5
+ 1                                              0
+                                                5:2=2
+                                                1
+                                                2:2=1
+                                                0
+                                                1:2=0
+                                                1
